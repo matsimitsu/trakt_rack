@@ -1,6 +1,8 @@
-require 'sinatra'
 require 'lib/api_keys'
 require 'lib/initializer'
+require 'sinatra'
+require 'models/show'
+
 
 class Application < Sinatra::Base
   class << self
