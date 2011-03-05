@@ -2,6 +2,7 @@ require 'lib/api_keys'
 require 'lib/initializer'
 require 'sinatra'
 require 'models/show'
+require 'models/episode'
 
 
 class Application < Sinatra::Base
@@ -23,15 +24,24 @@ class Application < Sinatra::Base
     Trakt::User::Calendar.new(Application.username, Application.password).enriched_results
   end
 
-  get '/users/watched.json' do
-    content_type :json
-    Trakt::User::Watched.new(Application.username, Application.password).enriched_results
-  end
-
   get '/users/library.json' do
     content_type :json
     Trakt::User::Library.new(Application.username, Application.password).enriched_results
   end
 
+  get '/shows/trending.json' do
+    content_type :json
+    Trakt::Show::Trending.new.enriched_results.to_json
+  end
+
+  get '/shows/:id.json' do
+    content_type :json
+    Trakt::Show::Show.new(Application.username, Application.password, params[:id]).enriched_results.to_json
+  end
+
+  get '/shows/:id/seasons_with_episodes.json' do
+    content_type :json
+    Trakt::Show::SeasonsWithEpisodes.new(Application.username, Application.password, params[:id]).enriched_results.to_json
+  end
 
 end

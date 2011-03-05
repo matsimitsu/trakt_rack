@@ -52,9 +52,10 @@ module Trakt
       def enriched_results
         results.map do |res|
           show = ::Show.find_or_fetch_from_tvdb_id(res['tvdb_id'])
+          puts show.inspect
           if show
-          #  res['poster'] = Trakt::external_url(show.poster_url)
-          #  res['thumb'] = Trakt::external_url(show.thumb_url)
+            res['poster'] = Trakt::external_url(show.poster_url)
+            res['thumb'] = Trakt::external_url(show.thumb_url)
             res['overview'] = show['overview']
             res['network'] = show['network']
             res['air_time'] = show['air_time']
@@ -72,47 +73,24 @@ module Trakt
       end
 
       def enriched_results
-        return Yajl::Encoder.encode(results)
         results.map do |day|
           day['date_epoch'] = Date.parse(day['date']).strftime('%s')
           day['episodes'].map do |res|
             show = ::Show.find_or_fetch_from_tvdb_id(res['show']['tvdb_id'])
             res['show']['poster'] = Trakt::external_url(show.poster_url)
-
             res['show']['overview'] = show.overview
             res['show']['network'] = show.network
-            res['show']['air_time'] = Time.parse(show.air_time).strftime("%T") rescue nil
-            episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, res['episode']['season'], res['episode']['number'])
+            res['show']['air_time'] = show.air_time
+            episode = Episode.find_or_fetch_from_show_and_season_and_episode(res['show']['tvdb_id'], res['episode']['season'], res['episode']['number'])
             res['episode']['overview'] = episode.overview_with_default
-            res['episode']['thumb'] = Trakt::external_url(episode.thumb_url)
+            res['episode']['thumb'] = Trakt::external_url(episode.thumb_url(show.default_thumb_url))
             res
           end
           day
         end
+        Yajl::Encoder.encode(results)
       end
     end
-
-    class Watched < Trakt::User::Base
-
-      def url
-        "#{base_url}/user/watched/episodes.json/#{Trakt::API_KEY}/#{username}"
-      end
-
-      def enriched_results
-        return Yajl::Encoder.encode(results)
-        results.map do |res|
-          show = ::Show.find_or_fetch_from_tvdb_id(res['show']['tvdb_id'])
-          res['show']['poster'] = Trakt::external_url(show.poster_url)
-          res['show']['overview'] = show.overview
-
-          episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, res['episode']['season'], res['episode']['number'])
-          res['episode']['overview'] = episode.overview_with_default
-          res
-        end
-      end
-
-    end
-
   end
 
   module Show
@@ -138,14 +116,14 @@ module Trakt
       def enriched_results
         show = ::Show.find_or_fetch_from_tvdb_id(tvdb_id)
         results['top_episodes'].map do |ep|
-          episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, ep['season'], ep['number'])
+          episode = Episode.find_or_fetch_from_show_and_season_and_episode(tvdb_id, ep['season'], ep['number'])
           ep['overview'] = episode.overview_with_default
-          ep['thumb'] = Trakt::external_url(episode.thumb_url)
+          ep['thumb'] = Trakt::external_url(episode.thumb_url(show.default_thumb_url))
           ep
         end
         results['poster'] = Trakt::external_url(show.poster_url)
         results['thumb'] = Trakt::external_url(show.thumb_url)
-        results
+        Yajl::Encoder.encode(results)
       end
     end
 
@@ -161,6 +139,7 @@ module Trakt
           season['episodes'] = episodes
           season['episode_count'] = episodes.length
         end
+        Yajl::Encoder.encode(results)
       end
     end
 
@@ -171,7 +150,7 @@ module Trakt
       end
 
       def enriched_results
-        results
+        Yajl::Encoder.encode(results)
       end
     end
 
@@ -200,11 +179,11 @@ module Trakt
         return_results = []
         results.each do |ep|
           res = {}
-          episode = Episode.find_or_fetch_from_show_and_season_and_episode(show, season, ep['episode'])
+          episode = Episode.find_or_fetch_from_show_and_season_and_episode(tvdb_id, season, ep['episode'])
           res['show'] = show_result
           res['episode'] = {}
           res['episode']['overview'] = episode.overview_with_default
-          res['episode']['thumb'] = Trakt::external_url(episode.thumb_url)
+          res['episode']['thumb'] = Trakt::external_url(episode.thumb_url(show.default_thumb_url))
           res['episode']['title'] = episode.name_with_default
           res['episode']['number'] = ep['episode']
           res['episode']['season'] = season
@@ -212,7 +191,7 @@ module Trakt
           res['rating'] = ep['ratings']
           return_results << res
         end
-        return  return_results
+        Yajl::Encoder.encode(return_results)
       end
     end
 
@@ -235,6 +214,7 @@ module Trakt
           res['air_time'] = show.air_time
           res
         end
+        Yajl::Encoder.encode(results)
       end
     end
 

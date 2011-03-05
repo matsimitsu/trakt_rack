@@ -1,8 +1,8 @@
 source 'http://rubygems.org'
 
 gem 'sinatra'
-gem 'mongo'
-gem 'bson'
+gem 'toystore'
+gem 'adapter-mongo'
 gem 'bson_ext', '1.2.4'
 gem 'yajl-ruby'
 gem 'curb'

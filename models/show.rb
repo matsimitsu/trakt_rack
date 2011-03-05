@@ -3,11 +3,30 @@ require 'uploaders/poster_uploader'
 require 'uploaders/default_thumb_uploader'
 
 class Show
+  include Toy::Store
+
+  store :mongo, Mongo::Connection.new.db('toystore_dev')['show']
+
+  mount_uploader :banner, BannerUploader
+  mount_uploader :poster, PosterUploader
+  mount_uploader :default_thumb, DefaultThumbUploader
+
+  key NamespacedShowKeyFactory.new
+
+  attribute :name, String
+  attribute :genres, Array
+  attribute :runtime, String
+  attribute :overview, String
+  attribute :first_aired, Date
+  attribute :network, String
+  attribute :tvdb_id, String
+  attribute :air_time, String
+
+  index :tvdb_id
 
   API_FIELDS = {
     :overview => 'overview',
     :genres => 'genres',
-    :runtime => 'runtime',
     :name => 'name',
     :first_aired => 'first_aired',
     :network => 'network',
@@ -26,14 +45,14 @@ class Show
 
   class << self
 
-    def collection
-      Trakt::DB.collection('shows')
+    def get(tvdb_id)
+      super("Show:#{tvdb_id}")
     end
 
     def find_or_fetch_from_tvdb_id(tvdb_id)
-      result = collection.find('tvdb_id' => tvdb_id)
-      if result.count > 0
-        result.first
+      result = Show.get(tvdb_id)
+      if result
+        result
       else
         self.update_or_create_from_tvdb_id(tvdb_id)
       end
@@ -50,18 +69,18 @@ class Show
       end
 
       new_show_data['first_aired'] = Time.utc(new_show_data['first_aired'].year, new_show_data['first_aired'].month, new_show_data['first_aired'].day)
-      new_show_data['air_time'] = Time.parse(new_show_data['air_time']).strftime("%T") if new_show_data['air_time']
-
+      if new_show_data['air_time']
+        begin
+          new_show_data['air_time'] = Time.parse(new_show_data['air_time']).strftime("%T")
+        rescue ArgumentError
+          new_show_data['air_time'] = nil
+        end
+      end
       new_show_data[:remote_banner_url] = tvdb_show.series_banners('en').first.url rescue nil
       new_show_data[:remote_poster_url] = tvdb_show.posters('en').first.url rescue nil
       new_show_data[:remote_default_thumb_url] = tvdb_show.fanart('en').first.url rescue nil
 
-      collection.update(
-        { 'tvdb_id' => tvdb_id },
-        { '$set' => new_show_data },
-        { :save => true, :upsert => true}
-      )
-      new_show_data
+      Show.create(new_show_data)
     end
 
   end
