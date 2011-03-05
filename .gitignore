@@ -1,2 +1,3 @@
 lib/api_keys.rb
 .DS_Store
+public/*
