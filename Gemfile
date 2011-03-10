@@ -10,6 +10,8 @@ gem 'httpi'
 gem 'carrierwave'
 gem 'mini_magick'
 gem 'tvdb_party', :git => 'git://github.com/matsimitsu/tvdb_party.git'
+gem 'capfire'
+gem 'capistrano'
 
 group :test do
   gem 'rspec', '2.1'

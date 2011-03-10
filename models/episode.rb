@@ -2,7 +2,7 @@ require 'uploaders/episode_thumb_uploader'
 
 class Episode
   include Toy::Store
-  store :mongo, Mongo::Connection.new.db('toystore_dev')['episode']
+  store :mongo, Mongo::Connection.new.db(DB)['episode']
   key NamespacedEpisodeKeyFactory.new
 
   mount_uploader :thumb, EpisodeThumbUploader

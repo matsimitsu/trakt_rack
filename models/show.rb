@@ -5,7 +5,7 @@ require 'uploaders/default_thumb_uploader'
 class Show
   include Toy::Store
 
-  store :mongo, Mongo::Connection.new.db('toystore_dev')['show']
+  store :mongo, Mongo::Connection.new.db(DB)['show']
 
   mount_uploader :banner, BannerUploader
   mount_uploader :poster, PosterUploader
