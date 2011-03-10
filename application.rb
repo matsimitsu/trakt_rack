@@ -31,17 +31,17 @@ class Application < Sinatra::Base
 
   get '/shows/trending.json' do
     content_type :json
-    Trakt::Show::Trending.new.enriched_results.to_json
+    Trakt::Show::Trending.new.enriched_results
   end
 
   get '/shows/:id.json' do
     content_type :json
-    Trakt::Show::Show.new(Application.username, Application.password, params[:id]).enriched_results.to_json
+    Trakt::Show::Show.new(Application.username, Application.password, params[:id]).enriched_results
   end
 
   get '/shows/:id/seasons_with_episodes.json' do
     content_type :json
-    Trakt::Show::SeasonsWithEpisodes.new(Application.username, Application.password, params[:id]).enriched_results.to_json
+    Trakt::Show::SeasonsWithEpisodes.new(Application.username, Application.password, params[:id]).enriched_results
   end
 
 end
