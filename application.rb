@@ -10,6 +10,11 @@ class Application < Sinatra::Base
     attr_accessor :username, :password
   end
 
+  configure do
+    set :dump_errors, true
+    set :logging, true
+  end
+
   set :root, File.dirname(__FILE__)
 
   use Rack::Auth::Basic, "iTrakt" do |username, password|

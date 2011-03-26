@@ -7,6 +7,11 @@ class Episode
 
   mount_uploader :thumb, EpisodeThumbUploader
 
+  after_create :clear_cache
+
+  def clear_cache
+    CarrierWave.clean_cached_files!
+  end
 
   attribute :tvdb_id, String
   attribute :name, String

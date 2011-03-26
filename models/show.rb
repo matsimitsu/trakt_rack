@@ -13,6 +13,12 @@ class Show
 
   key NamespacedShowKeyFactory.new
 
+  after_create :clear_cache
+
+  def clear_cache
+    CarrierWave.clean_cached_files!
+  end
+
   attribute :name, String
   attribute :genres, Array
   attribute :runtime, String
