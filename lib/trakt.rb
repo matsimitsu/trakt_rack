@@ -150,7 +150,7 @@ module Trakt
 
       def enriched_results
         results.each do |season|
-          episodes = Trakt::Show::Season.new(username, password, tvdb_id, season['season']).enriched_results
+          episodes = Trakt::Show::Season.new(username, password, tvdb_id, season['season']).enriched_results(false)
           season['episodes'] = episodes
           season['episode_count'] = episodes.length
         end
@@ -181,7 +181,7 @@ module Trakt
         "#{base_url}/show/season.json/#{Trakt::API_KEY}/#{tvdb_id}/#{season}"
       end
 
-      def enriched_results
+      def enriched_results(encoded = true)
         show = ::Show.find_or_fetch_from_tvdb_id(tvdb_id)
 
         show_result = {}
@@ -206,7 +206,7 @@ module Trakt
           res['rating'] = ep['ratings']
           return_results << res
         end
-        Yajl::Encoder.encode(return_results)
+        encoded ? Yajl::Encoder.encode(return_results) : return_results
       end
     end
 
