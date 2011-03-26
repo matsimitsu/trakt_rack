@@ -24,6 +24,7 @@ module Trakt
     def request
       request = HTTPI::Request.new
       request.url = url
+      puts url
       request.auth.basic username, password if username && password
       result = HTTPI.get request, :curb
       parser = Yajl::Parser.new
@@ -52,7 +53,6 @@ module Trakt
       def enriched_results
         results.map do |res|
           show = ::Show.find_or_fetch_from_tvdb_id(res['tvdb_id'])
-          puts show.inspect
           if show
             res['poster'] = Trakt::external_url(show.poster_url)
             res['thumb'] = Trakt::external_url(show.thumb_url)
@@ -106,6 +106,27 @@ module Trakt
 
     end
 
+    class Recommendations < Trakt::Show::Base
+
+      def initialize(username, password)
+        super(username, password, nil)
+      end
+
+      def url
+        "#{base_url}/recommendations/shows.json/#{Trakt::API_KEY}"
+      end
+
+      def enriched_results
+        results.map do |recommended_show|
+          show = ::Show.find_or_fetch_from_tvdb_id(recommended_show['tvdb_id'])
+          recommended_show['poster'] = Trakt::external_url(show.poster_url)
+          recommended_show['thumb'] = Trakt::external_url(show.thumb_url)
+          recommended_show
+        end
+        Yajl::Encoder.encode(results)
+      end
+
+    end
 
     class Show < Trakt::Show::Base
 
@@ -115,12 +136,6 @@ module Trakt
 
       def enriched_results
         show = ::Show.find_or_fetch_from_tvdb_id(tvdb_id)
-        results['top_episodes'].map do |ep|
-          episode = Episode.find_or_fetch_from_show_and_season_and_episode(tvdb_id, ep['season'], ep['number'])
-          ep['overview'] = episode.overview_with_default
-          ep['thumb'] = Trakt::external_url(episode.thumb_url(show.default_thumb_url))
-          ep
-        end
         results['poster'] = Trakt::external_url(show.poster_url)
         results['thumb'] = Trakt::external_url(show.thumb_url)
         Yajl::Encoder.encode(results)
@@ -197,8 +212,8 @@ module Trakt
 
     class Trending < Trakt::Base
 
-      def initialize
-        self.results = request
+      def initialize(username, password)
+        super(username, password)
       end
 
       def url

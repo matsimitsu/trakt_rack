@@ -29,9 +29,9 @@ class Application < Sinatra::Base
     Trakt::User::Library.new(Application.username, Application.password).enriched_results
   end
 
-  get '/shows/trending.json' do
+  get '/shows/recommendations.json' do
     content_type :json
-    Trakt::Show::Trending.new.enriched_results
+    Trakt::Show::Recommendations.new(Application.username, Application.password).enriched_results
   end
 
   get '/shows/:id.json' do

@@ -33,7 +33,6 @@ class Episode
     :show_tvdb_id => 'series_id'
   }
 
-
   def thumb_url(show_thumb_url)
     thumb_filename.present? ? thumb.url : show_thumb_url
   end
