@@ -112,6 +112,16 @@ module Trakt
         super(username, password, nil)
       end
 
+      def request
+        request = HTTPI::Request.new
+        request.url = url
+        request.body = { :username => username, :password => password}.to_json
+        request.auth.basic username, password if username && password
+        result = HTTPI.post request, :curb
+        parser = Yajl::Parser.new
+        parser.parse(result.raw_body)
+      end
+
       def url
         "#{base_url}/recommendations/shows.json/#{Trakt::API_KEY}"
       end
@@ -213,19 +223,7 @@ module Trakt
     class Trending < Trakt::Base
 
       def initialize(username, password)
-        self.username = username
-        self.password = password
-        self.results = request
-      end
-
-      def request
-        request = HTTPI::Request.new
-        request.url = url
-        request.body = { :username => username, :password => password}.to_json
-        request.auth.basic username, password if username && password
-        result = HTTPI.post request, :curb
-        parser = Yajl::Parser.new
-        parser.parse(result.raw_body)
+        super(username, password)
       end
 
       def url
