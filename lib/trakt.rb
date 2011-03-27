@@ -213,7 +213,9 @@ module Trakt
     class Trending < Trakt::Base
 
       def initialize(username, password)
-        super(username, password)
+        self.username = username
+        self.password = password
+        self.results = request
       end
 
       def request
