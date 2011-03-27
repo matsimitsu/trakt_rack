@@ -216,6 +216,16 @@ module Trakt
         super(username, password)
       end
 
+      def request
+        request = HTTPI::Request.new
+        request.url = url
+        request.body = { :username => username, :password => password}.to_json
+        request.auth.basic username, password if username && password
+        result = HTTPI.post request, :curb
+        parser = Yajl::Parser.new
+        parser.parse(result.raw_body)
+      end
+
       def url
         "#{Trakt::base_url}/shows/trending.json/#{Trakt::API_KEY}"
       end

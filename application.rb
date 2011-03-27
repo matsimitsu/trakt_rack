@@ -12,6 +12,7 @@ class Application < Sinatra::Base
 
   configure do
     set :dump_errors, true
+    set :environment, :development
     set :logging, true
   end
 

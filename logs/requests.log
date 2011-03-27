@@ -6,3 +6,4 @@
 127.0.0.1 - matsimitsu [26/Mar/2011 15:18:45] "GET /__sinatra__/500.png HTTP/1.1" 200 31056 0.0015
 127.0.0.1 - matsimitsu [26/Mar/2011 15:22:27] "GET /shows/trending.json HTTP/1.1" 500 140624 1.9706
 127.0.0.1 - matsimitsu [26/Mar/2011 15:22:27] "GET /__sinatra__/500.png HTTP/1.1" 200 31056 0.0017
+127.0.0.1 - matsimitsu [26/Mar/2011 15:33:29] "GET /shows/recommendations.json HTTP/1.1" 200 19613 5.9467
