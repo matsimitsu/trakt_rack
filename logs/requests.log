@@ -34,3 +34,9 @@
 127.0.0.1 - matsimitsu [29/Mar/2011 19:13:24] "GET /shows/74205/seasons_with_episodes.json HTTP/1.1" 200 19359 4.0517
 127.0.0.1 - matsimitsu [29/Mar/2011 19:13:48] "GET /shows/79488/seasons_with_episodes.json HTTP/1.1" 200 99391 14.0352
 127.0.0.1 - matsimitsu [29/Mar/2011 19:15:49] "GET /shows/78874/seasons_with_episodes.json HTTP/1.1" 200 22879 20.1693
+127.0.0.1 - - [29/Mar/2011 20:18:39] "GET /shows/79126/seasons_with_episodes.json HTTP/1.1" 401 - 0.0002
+127.0.0.1 - - [29/Mar/2011 20:18:43] "GET /favicon.ico HTTP/1.1" 401 - 0.0001
+127.0.0.1 - - [29/Mar/2011 20:18:43] "GET /favicon.ico HTTP/1.1" 401 - 0.0001
+127.0.0.1 - matsimitsu [29/Mar/2011 20:18:43] "GET /favicon.ico HTTP/1.1" 404 420 0.0007
+127.0.0.1 - matsimitsu [29/Mar/2011 20:18:43] "GET /favicon.ico HTTP/1.1" 404 420 0.0007
+127.0.0.1 - matsimitsu [29/Mar/2011 20:50:30] "GET /shows/79126/seasons_with_episodes.json HTTP/1.1" 200 122425 112.7459

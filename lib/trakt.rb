@@ -184,7 +184,10 @@ module Trakt
 
       def initialize(username, password, tvdb_id, season)
         self.season = season
-        super(username, password, tvdb_id)
+        self.username = username
+        self.password = password
+        self.tvdb_id = tvdb_id
+        self.results = request
       end
 
       def url
@@ -208,15 +211,15 @@ module Trakt
         return_results = []
         results.each do |ep|
           res = {}
-          episode = Episode.find_or_fetch_from_show_and_season_and_episode(tvdb_id, season, ep['episode'])
+          db_episode = Episode.find_or_fetch_from_show_and_season_and_episode(tvdb_id, season, ep['episode'])
           res['show'] = show_result
           res['episode'] = {}
-          res['episode']['overview'] = episode.overview_with_default
-          res['episode']['thumb'] = Trakt::external_url(episode.thumb_url(show.default_thumb_url))
-          res['episode']['title'] = episode.name_with_default
+          res['episode']['overview'] = db_episode.overview_with_default
+          res['episode']['thumb'] = Trakt::external_url(db_episode.thumb_url(show.default_thumb_url))
+          res['episode']['title'] = db_episode.name_with_default
           res['episode']['number'] = ep['episode']
           res['episode']['season'] = season
-          res['watched'] = ep['watched']
+          res['watched'] = ep['watched'] ? ep['watched'] : false
           res['rating'] = ep['ratings']
           return_results << res
         end
