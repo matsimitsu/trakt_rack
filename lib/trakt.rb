@@ -1,7 +1,7 @@
 require 'uri'
 require 'yajl'
 require 'digest/sha1'
-require 'curb'
+require 'httpclient'
 
 module Trakt
 
@@ -26,7 +26,7 @@ module Trakt
       request.url = url
       puts url
       request.auth.basic username, password if username && password
-      result = HTTPI.get request, :curb
+      result = HTTPI.get request, :httpclient
       parser = Yajl::Parser.new
       parser.parse(result.raw_body)
     end
@@ -117,7 +117,7 @@ module Trakt
         request.url = url
         request.body = { :username => username, :password => password}.to_json
         request.auth.basic username, password if username && password
-        result = HTTPI.post request, :curb
+        result = HTTPI.post request, :httpclient
         parser = Yajl::Parser.new
         parser.parse(result.raw_body)
       end
