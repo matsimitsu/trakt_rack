@@ -12,8 +12,8 @@ class Application < Sinatra::Base
 
   configure do
     set :dump_errors, true
-    set :environment, :development
-    set :logging, true
+    set :environment, :production
+    set :logging, false
   end
 
   set :root, File.dirname(__FILE__)

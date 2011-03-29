@@ -191,6 +191,10 @@ module Trakt
         "#{base_url}/show/season.json/#{Trakt::API_KEY}/#{tvdb_id}/#{season}"
       end
 
+      def episode(number)
+        results.select { |r| r['episode'] == number }.first
+      end
+
       def enriched_results(encoded = true)
         show = ::Show.find_or_fetch_from_tvdb_id(tvdb_id)
 

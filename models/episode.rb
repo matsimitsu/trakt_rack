@@ -27,15 +27,9 @@ class Episode
 
   API_FIELDS = {
     :overview => 'overview',
-    :season_number => 'season_number',
-    :episode_number => 'number',
-    :writer => 'writer',
-    :director => 'director',
-    :name => 'name',
-    :air_date => 'air_date',
-    :guest_stars => 'guest_stars',
-    :tvdb_id => 'id',
-    :show_tvdb_id => 'series_id'
+    :season_number => 'season',
+    :episode_number => 'episode',
+    :name => 'title'
   }
 
   def thumb_url(show_thumb_url)
@@ -66,18 +60,20 @@ class Episode
     end
 
     def create_from_show_and_season_and_episode(show_tvdb_id, season_number, episode_number)
-      tvdb = TvdbParty::Search.new(Tvdb::API_KEY)
-      tvdb_show = tvdb.get_series_by_id(show_tvdb_id)
-      tvdb_episode = tvdb_show.get_episode(season_number, episode_number)
+      season = APICache.get("season_#{show_tvdb_id}_#{season_number}", :cache => 3600) do
+        Trakt::Show::Season.new(nil, nil, show_tvdb_id, season_number)
+      end
+      episode = season.episode(episode_number)
 
       new_episode_data = {}
 
       API_FIELDS.each do |fld, remote_fld|
-        new_episode_data[fld.to_s] = tvdb_episode.send(remote_fld)
+        new_episode_data[fld.to_s] = episode[remote_fld]
       end
 
-      new_episode_data[:remote_thumb_url] = tvdb_episode.thumb rescue nil
-
+      new_episode_data[:remote_thumb_url] = episode['images']['screen'] rescue nil
+      new_episode_data[:show_tvdb_id] = show_tvdb_id
+      new_episode_data[:air_date] = Date.new(episode['first_aired'])
       Episode.create(new_episode_data)
     end
 
