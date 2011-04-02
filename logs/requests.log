@@ -40,3 +40,5 @@
 127.0.0.1 - matsimitsu [29/Mar/2011 20:18:43] "GET /favicon.ico HTTP/1.1" 404 420 0.0007
 127.0.0.1 - matsimitsu [29/Mar/2011 20:18:43] "GET /favicon.ico HTTP/1.1" 404 420 0.0007
 127.0.0.1 - matsimitsu [29/Mar/2011 20:50:30] "GET /shows/79126/seasons_with_episodes.json HTTP/1.1" 200 122425 112.7459
+127.0.0.1 - matsimitsu [02/Apr/2011 17:16:45] "GET /users/calendar.json HTTP/1.1" 200 25075 24.4391
+127.0.0.1 - matsimitsu [02/Apr/2011 17:16:52] "GET /shows/79488/seasons_with_episodes.json HTTP/1.1" 200 99401 2.7831
