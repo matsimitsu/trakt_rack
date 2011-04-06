@@ -7,7 +7,6 @@ class Show
 
   store :mongo, Mongo::Connection.new.db(DB)['show']
 
-  mount_uploader :banner, BannerUploader
   mount_uploader :poster, PosterUploader
   mount_uploader :default_thumb, DefaultThumbUploader
 
@@ -85,9 +84,15 @@ class Show
       else
         new_show_data['air_time'] = "00:00:00"
       end
-      new_show_data[:remote_banner_url] = trakt_show['images']['fanart']
-      new_show_data[:remote_poster_url] = trakt_show['images']['poster']
-      new_show_data[:remote_default_thumb_url] = trakt_show['images']['fanart']
+
+      if Trakt::image_exists?(trakt_show['images']['poster'])
+        new_show_data[:remote_poster_url] = trakt_show['images']['poster']
+      end
+
+      if Trakt::image_exists?(trakt_show['images']['fanart'])
+        new_show_data[:remote_default_thumb_url] = trakt_show['images']['fanart']
+      end
+
       Show.create(new_show_data)
     end
 

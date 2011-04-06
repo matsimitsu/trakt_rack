@@ -14,6 +14,19 @@ module Trakt
     "#{root_url}#{url}"
   end
 
+  def self.image_exists?(image_url)
+    begin
+      response = Typhoeus::Request.head(image_url)
+      if response.success?
+        return true
+      else
+        return false
+      end
+    rescue
+      return false
+    end
+  end
+
   class Base
     attr_accessor :results, :username, :password, :tvdb_id
 

@@ -71,7 +71,9 @@ class Episode
         new_episode_data[fld.to_s] = episode[remote_fld]
       end
 
-      new_episode_data[:remote_thumb_url] = episode['images']['screen'] rescue nil
+      if Trakt::image_exists?(episode['images']['screen'])
+        new_episode_data[:remote_thumb_url] = episode['images']['screen']
+      end
       new_episode_data[:show_tvdb_id] = show_tvdb_id
       new_episode_data[:air_date] = Date.new(episode['first_aired'])
       Episode.create(new_episode_data)
