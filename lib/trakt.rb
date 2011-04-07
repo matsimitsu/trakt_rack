@@ -63,18 +63,21 @@ module Trakt
 
       def enriched_results
         results.map do |res|
-          return nil if (res['tvdb_id'] == "0" || res['tvdb_id'] == 0)
-          show = ::Show.find_or_fetch_from_tvdb_id(res['tvdb_id'])
-          if show
-            res['poster'] = Trakt::external_url(show.poster_url)
-            res['thumb'] = Trakt::external_url(show.thumb_url)
-            res['overview'] = show['overview']
-            res['network'] = show['network']
-            res['air_time'] = show['air_time']
+          if (res['tvdb_id'] == "0" || res['tvdb_id'] == 0)
+            res
+          else
+            show = ::Show.find_or_fetch_from_tvdb_id(res['tvdb_id'])
+            if show
+              res['poster'] = Trakt::external_url(show.poster_url)
+              res['thumb'] = Trakt::external_url(show.thumb_url)
+              res['overview'] = show['overview']
+              res['network'] = show['network']
+              res['air_time'] = show['air_time']
+            end
+            res
           end
-          res
         end
-        Yajl::Encoder.encode(results.compact)
+        Yajl::Encoder.encode(results)
       end
     end
 
