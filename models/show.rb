@@ -74,7 +74,12 @@ class Show
         new_show_data[fld.to_s] = trakt_show[remote_fld]
       end
 
-      new_show_data['first_aired'] = Time.utc(new_show_data['first_aired']) rescue nil
+      begin
+        new_show_data['first_aired'] = Time.utc(new_show_data['first_aired'])
+      rescue
+        puts new_show_data.inspect
+      end
+
       if new_show_data['air_time']
         begin
           new_show_data['air_time'] = Time.parse(new_show_data['air_time']).strftime("%T")

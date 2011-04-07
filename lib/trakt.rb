@@ -63,6 +63,7 @@ module Trakt
 
       def enriched_results
         results.map do |res|
+          return nil if (res['tvdb_id'] == "0" || res['tvdb_id'] == 0)
           show = ::Show.find_or_fetch_from_tvdb_id(res['tvdb_id'])
           if show
             res['poster'] = Trakt::external_url(show.poster_url)
@@ -73,7 +74,7 @@ module Trakt
           end
           res
         end
-        Yajl::Encoder.encode(results)
+        Yajl::Encoder.encode(results.compact)
       end
     end
 
