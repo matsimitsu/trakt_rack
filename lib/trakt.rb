@@ -73,6 +73,8 @@ module Trakt
               res['overview'] = show['overview']
               res['network'] = show['network']
               res['air_time'] = show['air_time']
+              res['season_count'] = show['season_count']
+              res['episode_count'] = show['episode_count']
             end
             res
           end
@@ -148,6 +150,8 @@ module Trakt
           show = ::Show.find_or_fetch_from_tvdb_id(recommended_show['tvdb_id'])
           recommended_show['poster'] = Trakt::external_url(show.poster_url)
           recommended_show['thumb'] = Trakt::external_url(show.thumb_url)
+          recommended_show['season_count'] = show['season_count']
+          recommended_show['episode_count'] = show['episode_count']
           recommended_show
         end
         Yajl::Encoder.encode(results)
@@ -243,30 +247,6 @@ module Trakt
         encoded ? Yajl::Encoder.encode(return_results) : return_results
       end
     end
-
-    class Trending < Trakt::Base
-
-      def initialize(username, password)
-        super(username, password)
-      end
-
-      def url
-        "#{Trakt::base_url}/shows/trending.json/#{Trakt::API_KEY}"
-      end
-
-      def enriched_results
-        results.map do |res|
-          show = ::Show.find_or_fetch_from_tvdb_id(res['tvdb_id'])
-          res['poster'] = Trakt::external_url(show.poster_url)
-          res['thumb'] = Trakt::external_url(show.thumb_url)
-          res['network'] = show.network
-          res['air_time'] = show.air_time
-          res
-        end
-        Yajl::Encoder.encode(results)
-      end
-    end
-
   end
 
 end

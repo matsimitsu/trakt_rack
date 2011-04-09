@@ -26,6 +26,8 @@ class Show
   attribute :network, String
   attribute :tvdb_id, String
   attribute :air_time, String
+  attribute :season_count, Integer
+  attribute :episode_count, Integer
 
   index :tvdb_id
 
@@ -48,6 +50,11 @@ class Show
 
   def thumb_url
     default_thumb_filename.present? ? default_thumb.url : '/images/default_thumb.jpg'
+  end
+
+  def update_season_episode_count
+    info = Episode.get_season_episode_count(tvdb_id)
+    update_attributes(info)
   end
 
   class << self

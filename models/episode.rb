@@ -32,6 +32,12 @@ class Episode
     :name => 'title'
   }
 
+  after_save :update_show_season_episode_count
+
+  def update_show_season_episode_count
+    Show.get(show_tvdb_id).update_season_episode_count
+  end
+
   def thumb_url(show_thumb_url)
     thumb_filename.present? ? thumb.url : show_thumb_url
   end
@@ -77,6 +83,16 @@ class Episode
       new_episode_data[:show_tvdb_id] = show_tvdb_id
       new_episode_data[:air_date] = Date.new(episode['first_aired'])
       Episode.create(new_episode_data)
+    end
+
+    def get_season_episode_count(tvdb_id)
+      seasons = []
+      episodes = 0
+      self.store.client.find( 'show_tvdb_id' => tvdb_id ).each do |res|
+        episodes += 1;
+        seasons << res['season_number']
+      end
+      { :episode_count => episodes, :season_count => seasons.uniq.length }
     end
 
   end
