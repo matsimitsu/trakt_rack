@@ -169,6 +169,8 @@ module Trakt
         show = ::Show.find_or_fetch_from_tvdb_id(tvdb_id)
         results['poster'] = Trakt::external_url(show.poster_url)
         results['thumb'] = Trakt::external_url(show.thumb_url)
+        results['season_count'] = show['season_count']
+        results['episode_count'] = show['episode_count']
         Yajl::Encoder.encode(results)
       end
     end
