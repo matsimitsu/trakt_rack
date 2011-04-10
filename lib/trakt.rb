@@ -1,7 +1,7 @@
 require 'uri'
 require 'yajl'
 require 'digest/sha1'
-require 'typhoeus'
+require 'curb'
 
 module Trakt
 
@@ -35,11 +35,15 @@ module Trakt
     end
 
     def request
-      options = { :disable_ssl_peer_verification => true }
-      options.merge!({:username => username, :password => password}) if username && password
-      response = Typhoeus::Request.get(url, options.symbolize_keys)
+      c = Curl::Easy.new(url)
+      c.http_auth_types = :basic
+      if username && password
+        c.username = username
+        c.password = password
+      end
+      c.perform
       parser = Yajl::Parser.new
-      parser.parse(response.body)
+      parser.parse(c.body_str)
     end
   end
 
@@ -130,15 +134,15 @@ module Trakt
       end
 
       def request
-        options = {
-          :disable_ssl_peer_verification => true,
-          :content => { :username => username, :password => password}.to_json,
-          :username => username,
-          :password => password
-        }
-        response = Typhoeus::Request.post(url, options.symbolize_keys)
+        c = Curl::Easy.new(url)
+        c.http_auth_types = :basic
+        if username && password
+          c.username = username
+          c.password = password
+        end
+        c.http_post({ :username => username, :password => password}.to_json)
         parser = Yajl::Parser.new
-        parser.parse(response.body)
+        parser.parse(c.body_str)
       end
 
       def url

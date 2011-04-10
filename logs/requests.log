@@ -10,3 +10,13 @@
 127.0.0.1 - matsimitsu [10/Apr/2011 12:35:53] "GET /shows/71663/seasons_with_episodes.json HTTP/1.1" 200 1082576 19.3901
 127.0.0.1 - - [10/Apr/2011 12:36:25] "GET /shows/75978/seasons_with_episodes.json HTTP/1.1" 401 - 0.0001
 127.0.0.1 - matsimitsu [10/Apr/2011 12:36:50] "GET /shows/75978/seasons_with_episodes.json HTTP/1.1" 200 246022 25.1857
+127.0.0.1 - matsimitsu [10/Apr/2011 13:48:46] "GET /users/library.json HTTP/1.1" 200 135950 2.9526
+127.0.0.1 - matsimitsu [10/Apr/2011 13:48:46] "GET /users/calendar.json HTTP/1.1" 200 32900 2.8345
+127.0.0.1 - matsimitsu [10/Apr/2011 13:48:48] "GET /shows/recommendations.json HTTP/1.1" 200 19032 5.0692
+127.0.0.1 - matsimitsu [10/Apr/2011 13:49:18] "GET /users/calendar.json HTTP/1.1" 200 32900 2.1427
+127.0.0.1 - matsimitsu [10/Apr/2011 13:49:19] "GET /users/library.json HTTP/1.1" 200 135950 2.5628
+127.0.0.1 - matsimitsu [10/Apr/2011 13:49:21] "GET /shows/recommendations.json HTTP/1.1" 200 19032 5.0788
+127.0.0.1 - matsimitsu [10/Apr/2011 13:50:52] "GET /shows/recommendations.json HTTP/1.1" 200 19032 52.9606
+127.0.0.1 - matsimitsu [10/Apr/2011 13:51:17] "GET /users/calendar.json HTTP/1.1" 200 32900 78.2931
+127.0.0.1 - matsimitsu [10/Apr/2011 13:51:48] "GET /shows/95761/seasons_with_episodes.json HTTP/1.1" 200 23786 1.9126
+127.0.0.1 - matsimitsu [10/Apr/2011 13:52:10] "GET /shows/79488/seasons_with_episodes.json HTTP/1.1" 200 84722 10.5411
