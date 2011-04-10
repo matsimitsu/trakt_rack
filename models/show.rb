@@ -28,6 +28,7 @@ class Show
   attribute :air_time, String
   attribute :season_count, Integer
   attribute :episode_count, Integer
+  attribute :image_sources, Hash
 
   index :tvdb_id
 
@@ -41,8 +42,17 @@ class Show
     :runtime => 'runtime',
     :year => 'year',
     :country => 'country',
-    :certification => 'certification'
+    :certification => 'certification',
+    :image_sources => 'images'
   }
+
+  after_create :enqueue_get_images
+
+  def enqueue_get_images
+    puts 'enqueueing images'
+    puts "TVDBID: #{tvdb_id}"
+    Navvy::Job.enqueue(Show, :get_images, tvdb_id)
+  end
 
   def poster_url
     poster_filename.present? ? poster.url(:retina) : nil
@@ -97,15 +107,25 @@ class Show
         new_show_data['air_time'] = "00:00:00"
       end
 
-      if Trakt::image_exists?(trakt_show['images']['poster'])
-        new_show_data[:remote_poster_url] = trakt_show['images']['poster']
-      end
-
-      if Trakt::image_exists?(trakt_show['images']['fanart'])
-        new_show_data[:remote_default_thumb_url] = trakt_show['images']['fanart']
-      end
-
       Show.create(new_show_data)
+    end
+
+    def update_season_episode_count(show_tvdb_id)
+        Show.get(show_tvdb_id).update_season_episode_count
+    end
+
+    def get_images(tvdb_id)
+      show = Show.get(tvdb_id)
+      new_show_data = {}
+
+      if Trakt::image_exists?(show.image_sources['poster'])
+        new_show_data[:remote_poster_url] = show.image_sources['poster']
+      end
+
+      if Trakt::image_exists?(show.image_sources['fanart'])
+        new_show_data[:remote_default_thumb_url] = show.image_sources['fanart']
+      end
+      show.update_attributes(new_show_data)
     end
 
   end

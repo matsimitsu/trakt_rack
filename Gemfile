@@ -11,6 +11,9 @@ gem 'mini_magick'
 gem 'capfire'
 gem 'capistrano'
 gem 'api_cache'
+gem 'navvy'
+gem 'mongoid'
+gem 'rake'
 
 group :test do
   gem 'rspec', '2.1'

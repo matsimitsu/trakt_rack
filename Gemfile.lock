@@ -47,7 +47,13 @@ GEM
       subexec (~> 0.0.4)
     mongo (1.2.4)
       bson (>= 1.2.4)
+    mongoid (2.0.0)
+      activemodel (~> 3.0)
+      mongo (~> 1.2)
+      tzinfo (~> 0.3.22)
+      will_paginate (~> 3.0.pre)
     nap (0.4)
+    navvy (0.3.1)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
@@ -58,6 +64,7 @@ GEM
     rack (1.2.2)
     rack-test (0.5.7)
       rack (>= 1.0)
+    rake (0.8.7)
     rspec (2.1.0)
       rspec-core (~> 2.1.0)
       rspec-expectations (~> 2.1.0)
@@ -83,6 +90,8 @@ GEM
     typhoeus (0.2.4)
       mime-types
       mime-types
+    tzinfo (0.3.26)
+    will_paginate (3.0.pre2)
     yajl-ruby (0.8.2)
 
 PLATFORMS
@@ -98,7 +107,10 @@ DEPENDENCIES
   fakeweb
   fuubar
   mini_magick
+  mongoid
+  navvy
   rack-test
+  rake
   rspec (= 2.1)
   sinatra
   steak (~> 1.0)

@@ -22,6 +22,7 @@ class Episode
   attribute :air_date, Date
   attribute :guest_stars, Array
   attribute :show_tvdb_id, String
+  attribute :image_sources, Hash
 
   index :show_tvdb_id
 
@@ -29,13 +30,20 @@ class Episode
     :overview => 'overview',
     :season_number => 'season',
     :episode_number => 'episode',
-    :name => 'title'
+    :name => 'title',
+    :image_sources => 'images'
   }
 
-  after_save :update_show_season_episode_count
+  after_save :enqueue_update_show_season_episode_count
 
-  def update_show_season_episode_count
-    Show.get(show_tvdb_id).update_season_episode_count
+  after_create :enqueue_get_images
+
+  def enqueue_get_images
+    Navvy::Job.enqueue(Episode, :get_images, show_tvdb_id, season_number, episode_number)
+  end
+
+  def enqueue_update_show_season_episode_count
+    Navvy::Job.enqueue(Show, :update_season_episode_count, show_tvdb_id)
   end
 
   def thumb_url(show_thumb_url)
@@ -77,9 +85,6 @@ class Episode
         new_episode_data[fld.to_s] = episode[remote_fld]
       end
 
-      if Trakt::image_exists?(episode['images']['screen'])
-        new_episode_data[:remote_thumb_url] = episode['images']['screen']
-      end
       new_episode_data[:show_tvdb_id] = show_tvdb_id
       new_episode_data[:air_date] = Date.new(episode['first_aired'])
       Episode.create(new_episode_data)
@@ -93,6 +98,19 @@ class Episode
         seasons << res['season_number']
       end
       { :episode_count => episodes, :season_count => seasons.uniq.length }
+    end
+
+
+    def get_images(show_tvdb_id, season, episode)
+      episode = Episode.get(show_tvdb_id, season, episode)
+
+      new_episode_data = {}
+
+      if Trakt::image_exists?(episode.image_sources['screen'])
+        new_episode_data[:remote_thumb_url] = episode.image_sources['screen']
+      end
+
+      episode.update_attributes(new_episode_data)
     end
 
   end

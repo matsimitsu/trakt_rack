@@ -4,7 +4,7 @@ class DefaultThumbUploader < CarrierWave::Uploader::Base
   storage :file
 
   def store_dir
-    "uploads/#{model.tvdb_id}"
+    "public/uploads/#{model.tvdb_id}"
   end
 
   def filename

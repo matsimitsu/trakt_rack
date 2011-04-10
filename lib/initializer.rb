@@ -2,10 +2,11 @@ require 'lib/trakt'
 require 'toystore'
 require 'adapter/mongo'
 require 'carrierwave'
+require 'navvy'
+require 'navvy/job/mongoid'
 
 module Trakt
   API_KEY = TRAKT_API_KEY
-  DB = Mongo::Connection.new.db('itrakt_development')
 
   def self.root_url
     'http://itrakt.matsimitsu.com'
@@ -61,3 +62,9 @@ module CarrierWave
 end # CarrierWave
 
 Toy::Attributes::ClassMethods.send(:include, CarrierWave::Toystore)
+
+
+Mongoid.configure do |config|
+  config.allow_dynamic_fields = false
+  config.master = Mongo::Connection.new.db(DB)
+end
