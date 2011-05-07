@@ -9,7 +9,7 @@ set :environment, :test
 Rspec.configure do |config|
 
   config.before(:each) do
-    [Show, Episode].each { |model| model.delete_all }
+    [Show, Episode].each { |model| model.store.clear }
   end
 
 end
