@@ -15,6 +15,7 @@ gem 'api_cache'
 gem 'navvy'
 gem 'mongoid'
 gem 'rake'
+gem 'hoptoad_notifier'
 
 group :test do
   gem 'rspec', '2.1'

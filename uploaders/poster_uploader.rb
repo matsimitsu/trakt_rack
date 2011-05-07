@@ -3,6 +3,10 @@ class PosterUploader < CarrierWave::Uploader::Base
 
   storage :file
 
+  def root
+    Sinatra::Application.root
+  end
+
   def store_dir
     "public/uploads/#{model.tvdb_id}"
   end
@@ -13,7 +17,6 @@ class PosterUploader < CarrierWave::Uploader::Base
       "#{mounted_as}-#{model.tvdb_id}#{extension}"
     end
   end
-
 
   version :retina do
     process :resize_to_fit => [276,406]

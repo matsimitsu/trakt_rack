@@ -3,6 +3,10 @@ class DefaultThumbUploader < CarrierWave::Uploader::Base
 
   storage :file
 
+  def root
+    Sinatra::Application.root
+  end
+
   def store_dir
     "public/uploads/#{model.tvdb_id}"
   end

@@ -3,9 +3,16 @@ require 'lib/initializer'
 require 'sinatra'
 require 'models/show'
 require 'models/episode'
+require 'hoptoad_notifier'
 
+HoptoadNotifier.configure do |config|
+  config.api_key = '3264725a8c0800d614acad1ffa517ed3'
+end
 
 class Application < Sinatra::Base
+  use HoptoadNotifier::Rack
+  enable :raise_errors
+
   class << self
     attr_accessor :username, :password
   end

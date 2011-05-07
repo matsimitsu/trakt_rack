@@ -1,4 +1,5 @@
 require 'uploaders/episode_thumb_uploader'
+require 'api_cache'
 
 class Episode
   include Toy::Store
@@ -100,15 +101,11 @@ class Episode
       { :episode_count => episodes, :season_count => seasons.uniq.length }
     end
 
-
     def get_images(show_tvdb_id, season, episode)
       episode = Episode.get(show_tvdb_id, season, episode)
 
       new_episode_data = {}
-
-      if Trakt::image_exists?(episode.image_sources['screen'])
-        new_episode_data[:remote_thumb_url] = episode.image_sources['screen']
-      end
+      new_episode_data[:remote_thumb_url] = episode.image_sources['screen']
 
       episode.update_attributes(new_episode_data)
     end

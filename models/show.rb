@@ -47,11 +47,18 @@ class Show
   }
 
   after_create :enqueue_get_images
+  after_create :enqueue_get_seasons
 
   def enqueue_get_images
     puts 'enqueueing images'
     puts "TVDBID: #{tvdb_id}"
     Navvy::Job.enqueue(Show, :get_images, tvdb_id)
+  end
+
+  def enqueue_get_seasons
+    puts 'enqueueing images'
+    puts "TVDBID: #{tvdb_id}"
+    Navvy::Job.enqueue(Show, :get_seasons, tvdb_id)
   end
 
   def poster_url
@@ -114,17 +121,17 @@ class Show
         Show.get(show_tvdb_id).update_season_episode_count
     end
 
+    def get_seasons(tvdb_id)
+      Trakt::Show::SeasonsWithEpisodes.new(nil, nil, tvdb_id).enriched_results
+    end
+
     def get_images(tvdb_id)
       show = Show.get(tvdb_id)
       new_show_data = {}
 
-      if Trakt::image_exists?(show.image_sources['poster'])
-        new_show_data[:remote_poster_url] = show.image_sources['poster']
-      end
+      new_show_data[:remote_poster_url] = show.image_sources['poster']
+      new_show_data[:remote_default_thumb_url] = show.image_sources['fanart']
 
-      if Trakt::image_exists?(show.image_sources['fanart'])
-        new_show_data[:remote_default_thumb_url] = show.image_sources['fanart']
-      end
       show.update_attributes(new_show_data)
     end
 

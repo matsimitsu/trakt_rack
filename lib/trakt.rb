@@ -11,7 +11,7 @@ module Trakt
 
   def self.external_url(url)
     return unless url
-    "#{root_url}#{url}"
+    "#{root_url}#{url.gsub('public/', '')}"
   end
 
   def self.image_exists?(image_url)
