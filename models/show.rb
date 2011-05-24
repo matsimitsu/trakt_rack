@@ -66,7 +66,7 @@ class Show
   end
 
   def thumb_url
-    default_thumb_filename.present? ? default_thumb.url : '/images/default_thumb.jpg'
+    default_thumb_filename.present? ? default_thumb.url : nil
   end
 
   def update_season_episode_count

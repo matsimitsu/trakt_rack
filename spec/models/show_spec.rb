@@ -46,7 +46,7 @@ describe Show do
 
     it "should return nil when thumb url is not present" do
       show = Show.create!
-      show.thumb_url.should == '/images/default_thumb.jpg'
+      show.thumb_url.should be_nil
     end
 
   end
