@@ -3,3 +3,4 @@ lib/api_keys.rb
 public/*
 config/deploy.rb
 uploads/
+logs/*

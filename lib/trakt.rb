@@ -186,7 +186,7 @@ module Trakt
       end
 
       def enriched_results
-        results.each do |season|
+        results.reverse!.each do |season|
           episodes = Trakt::Show::Season.new(username, password, tvdb_id, season['season']).enriched_results(false)
           season['episodes'] = episodes
           season['episode_count'] = episodes.length
