@@ -66,7 +66,7 @@ module Trakt
       end
 
       def enriched_results
-        results.sort_by{ |result| result['name']}.map do |res|
+        results.map do |res|
           if (res['tvdb_id'] == "0" || res['tvdb_id'] == 0)
             res
           else
