@@ -106,6 +106,7 @@ module Trakt
             episode = Episode.find_or_fetch_from_show_and_season_and_episode(res['show']['tvdb_id'], res['episode']['season'], res['episode']['number'])
             res['episode']['overview'] = episode.overview_with_default
             res['episode']['thumb'] = Trakt::external_url(episode.thumb_url(show.default_thumb_url))
+            res['episode']['watched'] = res['watched']
             res
           end
           day
