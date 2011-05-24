@@ -66,7 +66,7 @@ module Trakt
       end
 
       def enriched_results
-        results.map do |res|
+        results.sort_by{ |result| result['name']}.map do |res|
           if (res['tvdb_id'] == "0" || res['tvdb_id'] == 0)
             res
           else
@@ -99,6 +99,7 @@ module Trakt
           day['episodes'].map do |res|
             show = ::Show.find_or_fetch_from_tvdb_id(res['show']['tvdb_id'])
             res['show']['poster'] = Trakt::external_url(show.poster_url)
+            res['show']['thumb'] = Trakt::external_url(show.thumb_url)
             res['show']['overview'] = show.overview
             res['show']['network'] = show.network
             res['show']['air_time'] = show.air_time

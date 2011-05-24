@@ -89,8 +89,8 @@ class Show
       end
     end
 
-    def update_or_create_from_tvdb_id(tvdb_id, default_attributes={})
-      trakt_show = Trakt::Show::Show.new(nil, nil, tvdb_id).results
+    def update_or_create_from_tvdb_id(tvdb_id, data=nil)
+      trakt_show = data || Trakt::Show::Show.new(nil, nil, tvdb_id).results
 
       new_show_data = {}
 

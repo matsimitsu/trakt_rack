@@ -68,3 +68,17 @@ Mongoid.configure do |config|
   config.allow_dynamic_fields = false
   config.master = Mongo::Connection.new.db(DB)
 end
+
+
+
+class Hash
+  def subset_including(*keys)
+    Hash[ select{ |key, value| keys.include? key } ]
+  end
+
+  def subset_excluding(*keys)
+    Hash[ select{ |key, value| !keys.include? key } ]
+  end
+
+  alias_method :subset, :subset_including
+end
